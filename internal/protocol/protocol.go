@@ -24,6 +24,8 @@ import (
 	"time"
 )
 
+const ETCD_DB_PREFIX = "s5-db"
+
 var (
 	_ s5storage.ProviderStore = (*S5ProviderStore)(nil)
 	_ core.Protocol           = (*S5Protocol)(nil)
@@ -100,10 +102,6 @@ func configureS5Protocol(proto *S5Protocol) (*s5config.NodeConfig, error) {
 		cfg.HTTP.API.Port = portalCfg.Core.Port
 	}
 
-	if cfg.DbPath == "" {
-		proto.logger.Fatal("protocol.s5.db_path is required")
-	}
-
 	hasher := hkdf.New(sha256.New, portalCfg.Core.Identity.PrivateKey(), nil, []byte("s5"))
 	derivedSeed := make([]byte, 32)
 
@@ -115,7 +113,10 @@ func configureS5Protocol(proto *S5Protocol) (*s5config.NodeConfig, error) {
 	p := ed25519.NewKeyFromSeed(derivedSeed)
 	cfg.KeyPair = s5ed.New(p)
 
-	cfg.DB = s5db.NewBboltDBKVStore(cfg.DbPath, nil)
+	cfg.DB, err = getDb(cm, proto.logger)
+	if err != nil {
+		return nil, err
+	}
 
 	cfg.Logger = proto.logger.Named("s5")
 
@@ -350,4 +351,69 @@ func GetStorageProtocol(obj any) core.StorageProtocol {
 	}
 
 	panic("invalid protocol")
+}
+
+func getDbMode(cm config.Manager) string {
+	cfg := cm.Config().Protocol["s5"].(*Config)
+
+	switch cfg.Db.Type {
+	case "db":
+		return "db"
+	case "etcd":
+		if cm.Config().Core.Clustered.Enabled {
+			return "etcd"
+		}
+
+		return "db"
+	}
+
+	return "db"
+}
+
+func getDbCacheMode(cm config.Manager) string {
+	cfg := cm.Config().Protocol["s5"].(*Config)
+
+	switch cfg.Db.Cache.Type {
+	case "lru":
+		return "lru"
+	}
+
+	return "none"
+}
+
+func getDbCache(cm config.Manager) (s5db.Cache, error) {
+	cfg := cm.Config().Protocol["s5"].(*Config)
+
+	switch cfg.Db.Cache.Type {
+	case "lru":
+		return s5db.NewLRUCache(cfg.Db.Cache.LRUCacheSize)
+	}
+
+	return nil, nil
+}
+
+func getDb(cm config.Manager, logger *core.Logger) (s5db.KVStore, error) {
+	mode := getLockerMode(cm, logger)
+	cache, err := getDbCache(cm)
+
+	if err != nil {
+		return nil, err
+	}
+
+	switch mode {
+	case "db":
+		cfg := cm.Config().Protocol["s5"].(*Config)
+		return s5db.NewBboltDBKVStore(cfg.Db.DbPath, cache), nil
+	case "etcd":
+		client, err := cm.Config().Core.Clustered.Etcd.Client()
+		if err != nil {
+			return nil, err
+		}
+
+		kvStore := s5db.NewEtcdKVStore(client, ETCD_DB_PREFIX, cache, 0)
+
+		return kvStore, nil
+	}
+
+	return nil, nil
 }

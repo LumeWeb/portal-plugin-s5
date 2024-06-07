@@ -6,7 +6,7 @@ toolchain go1.22.2
 
 require (
 	github.com/LumeWeb/httputil v0.0.0-20240601144746-504fd57b96e6
-	github.com/LumeWeb/libs5-go v0.0.0-20240601163059-7c2ad55a8c04
+	github.com/LumeWeb/libs5-go v0.0.0-20240606191331-125741e0f4a6
 	github.com/LumeWeb/portal v0.1.0-develop.3.0.20240606093808-352f3f6dc83b
 	github.com/aws/aws-sdk-go-v2 v1.27.1
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.55.0
@@ -61,6 +61,7 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gotd/contrib v0.20.0 // indirect
+	github.com/hashicorp/golang-lru v1.0.2 // indirect
 	github.com/hbollon/go-edlib v1.6.0 // indirect
 	github.com/invopop/yaml v0.3.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
