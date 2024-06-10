@@ -105,10 +105,6 @@ func (s S5API) Subdomain() string {
 	return "s5"
 }
 
-func (s S5API) Start(ctx context.Context) error {
-	return s.protocol.Node().Start(ctx)
-}
-
 func (s *S5API) Can(_ http.ResponseWriter, r *http.Request) bool {
 	host := r.Host
 	if strings.Contains(host, ":") {
