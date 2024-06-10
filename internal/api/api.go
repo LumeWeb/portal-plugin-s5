@@ -107,12 +107,13 @@ func (s S5API) Subdomain() string {
 }
 
 func (s *S5API) Init(_ *core.Context) error {
-	proto, err := core.GetProtocol("s5")
+	proto, err := core.GetProtocol(protocolName)
 	if err != nil {
 		return err
 	}
 
 	s.protocol = proto.(*s5.S5Protocol)
+	s.tusHandler = proto.(*s5.S5Protocol).TusHandler()
 	return nil
 }
 
@@ -723,7 +724,7 @@ func (s *S5API) accountPins(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tusRet, err := s.getTusHandler().Uploads(r.Context(), userID)
+	tusRet, err := s.tusHandler.Uploads(r.Context(), userID)
 	if err != nil {
 		_ = ctx.Error(NewS5Error(ErrKeyStorageOperationFailed, err), http.StatusInternalServerError)
 		return
@@ -2093,19 +2094,6 @@ func (s *S5API) Configure(router *mux.Router) error {
 	})
 
 	return nil
-}
-
-func (s *S5API) getTusHandler() *s5.TusHandler {
-	if s.tusHandler == nil {
-		proto, err := core.GetProtocol(protocolName)
-		if err != nil {
-			panic(err)
-		}
-
-		s.tusHandler = proto.(*s5.S5Protocol).TusHandler()
-	}
-
-	return s.tusHandler
 }
 
 func isCidManifest(cid *encoding.CID) bool {
