@@ -106,7 +106,7 @@ func (s S5API) Subdomain() string {
 	return "s5"
 }
 
-func (s S5API) Init(_ *core.Context) error {
+func (s *S5API) Init(_ *core.Context) error {
 	proto, err := core.GetProtocol("s5")
 	if err != nil {
 		return err
