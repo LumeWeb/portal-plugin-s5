@@ -58,6 +58,7 @@ import (
 var (
 	_ core.API         = (*S5API)(nil)
 	_ core.RoutableAPI = (*S5API)(nil)
+	_ core.APIInit     = (*S5API)(nil)
 )
 
 const protocolName = "s5"
@@ -103,6 +104,16 @@ func NewS5API(ctx core.Context) *S5API {
 
 func (s S5API) Subdomain() string {
 	return "s5"
+}
+
+func (s S5API) Init(_ *core.Context) error {
+	proto, err := core.GetProtocol("s5")
+	if err != nil {
+		return err
+	}
+
+	s.protocol = proto.(*s5.S5Protocol)
+	return nil
 }
 
 func (s *S5API) Can(_ http.ResponseWriter, r *http.Request) bool {
