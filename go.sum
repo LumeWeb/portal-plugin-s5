@@ -9,8 +9,8 @@ github.com/LumeWeb/httputil v0.0.0-20240601144746-504fd57b96e6 h1:joyRQ9XsrmQzVZ
 github.com/LumeWeb/httputil v0.0.0-20240601144746-504fd57b96e6/go.mod h1:u+QERcfCAfjXWR350270DOz+zZ6CRZdBN6IzDYTZCkw=
 github.com/LumeWeb/libs5-go v0.0.0-20240606191331-125741e0f4a6 h1:PkjzKGAEkD3s1TwKlibpvEZttF/v8opnH73WjtopoyI=
 github.com/LumeWeb/libs5-go v0.0.0-20240606191331-125741e0f4a6/go.mod h1:MhyAfjlWFP7j3w52AOP5pN1fM2w3mtTJUogwx1EllUY=
-github.com/LumeWeb/portal v0.1.0-develop.3.0.20240611012546-f3b9205ff82d h1:zlGy9D8MjXTi2qgmer8E+4WQzNV8WRF7NQltoSubKGE=
-github.com/LumeWeb/portal v0.1.0-develop.3.0.20240611012546-f3b9205ff82d/go.mod h1:SUL7j35AcZGbd7YVyehDAHH9wc3RLxFN1QSCPDRpxik=
+github.com/LumeWeb/portal v0.1.0-develop.3.0.20240611165859-14b4cf984c8b h1:htrM2eNkn4uadBKwk17SAVzO1kj7WC4TsvHfG/PXTwc=
+github.com/LumeWeb/portal v0.1.0-develop.3.0.20240611165859-14b4cf984c8b/go.mod h1:O9k4tjuErowEZBXMMY1QbLD+wI1WXIlONuQwQu9rq0A=
 github.com/LumeWeb/tusd-etcd3-locker v0.0.0-20240510103936-0d66760cf053 h1:GhYSPWvtdQpg8SL+rIJBhyNwbd9XEMC7qsFrekYCj+g=
 github.com/LumeWeb/tusd-etcd3-locker v0.0.0-20240510103936-0d66760cf053/go.mod h1:oCkYMGOVR+cdsxDmGvM5CxOPL2RSeQ3139XZGGBYiPk=
 github.com/LumeWeb/tusd/v2 v2.2.3-0.20240531203802-3185ee9b16f8 h1:c5qiGsUnEeSYt+X4ixm1Hte4hateDVg14WhKJmZROb4=
@@ -288,7 +288,6 @@ github.com/json-iterator/go v1.1.11/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/
 github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=
 github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
 github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7VTCxuUUipMqKk8s4w=
-github.com/julienschmidt/httprouter v1.3.0 h1:U0609e9tgbseu3rBINet9P48AI/D3oJs4dN7jwJOQ1U=
 github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
 github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0/go.mod h1:1NbS8ALrpOvjt0rHPNLyCIeMtbizbir8U//inJ+zuB8=
 github.com/kisielk/errcheck v1.1.0/go.mod h1:EZBBE59ingxPouuu3KfxchcWSUPOHkagtvWXihfKN4Q=
@@ -528,8 +527,6 @@ go.sia.tech/core v0.2.6 h1:JrbZwW4cPHCB2Q6TeqCsAj2GAFXrRqLq0q/GNevtnPU=
 go.sia.tech/core v0.2.6/go.mod h1:B7ooFH3F6cLjxQz6IX33kgjOY392Ava7pzpPeccagac=
 go.sia.tech/coreutils v0.0.5 h1:Jj03VrqAayYHgA9fwV13+X88WB+Wr1p8wuLw2B8d2FI=
 go.sia.tech/coreutils v0.0.5/go.mod h1:SkSpHeq3tBh2ff4HXuBk2WtlhkYQQtdcvU4Yv1Rd2bU=
-go.sia.tech/jape v0.11.2-0.20240228204811-29a0f056d231 h1:qdPohazZ009Xh2Vkd/SBcy0nNUX9M0qnhslAHsomPdw=
-go.sia.tech/jape v0.11.2-0.20240228204811-29a0f056d231/go.mod h1:4QqmBB+t3W7cNplXPj++ZqpoUb2PeiS66RLpXmEGap4=
 go.sia.tech/mux v1.2.0 h1:ofa1Us9mdymBbGMY2XH/lSpY8itFsKIo/Aq8zwe+GHU=
 go.sia.tech/mux v1.2.0/go.mod h1:Yyo6wZelOYTyvrHmJZ6aQfRoer3o4xyKQ4NmQLJrBSo=
 go.sia.tech/renterd v1.0.7 h1:xK8KVtG+/QfUI3saci29Gl60pilHIkY5dFQHJe1iecQ=

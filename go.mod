@@ -7,7 +7,7 @@ toolchain go1.22.2
 require (
 	github.com/LumeWeb/httputil v0.0.0-20240601144746-504fd57b96e6
 	github.com/LumeWeb/libs5-go v0.0.0-20240606191331-125741e0f4a6
-	github.com/LumeWeb/portal v0.1.0-develop.3.0.20240611012546-f3b9205ff82d
+	github.com/LumeWeb/portal v0.1.0-develop.3.0.20240611165859-14b4cf984c8b
 	github.com/aws/aws-sdk-go-v2 v1.27.2
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.55.1
 	github.com/ddo/rq v0.0.0-20190828174524-b3daa55fcaba
@@ -68,7 +68,6 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jonboulle/clockwork v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
-	github.com/julienschmidt/httprouter v1.3.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.8 // indirect
 	github.com/klauspost/reedsolomon v1.12.1 // indirect
 	github.com/knadh/koanf v1.5.0 // indirect
@@ -102,7 +101,6 @@ require (
 	go.etcd.io/etcd/client/v3 v3.5.14 // indirect
 	go.sia.tech/core v0.2.6 // indirect
 	go.sia.tech/coreutils v0.0.5 // indirect
-	go.sia.tech/jape v0.11.2-0.20240228204811-29a0f056d231 // indirect
 	go.sia.tech/mux v1.2.0 // indirect
 	go.sia.tech/renterd v1.0.7 // indirect
 	go.sia.tech/siad v1.5.10-0.20230228235644-3059c0b930ca // indirect
