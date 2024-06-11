@@ -97,7 +97,7 @@ func NewS5API(ctx core.Context) *S5API {
 		logger:   ctx.Logger(),
 		cron:     ctx.Services().Cron(),
 		_import:  ctx.Services().Importer(),
-		sync:     ctx.Services().Syncer(),
+		sync:     ctx.Services().Sync(),
 		dnslink:  ctx.Services().DNSLink(),
 	}
 }
