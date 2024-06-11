@@ -975,8 +975,10 @@ func (s *S5API) pinEntity(ctx context.Context, userId uint, userIp string, cid *
 		return nil
 	}
 
-	if middleware.CtxAborted(ctx) {
+	select {
+	case <-ctx.Done():
 		return ctx.Err()
+	default:
 	}
 
 	err = s._import.SaveImport(ctx, core.ImportMetadata{
