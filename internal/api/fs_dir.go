@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"errors"
 	"io/fs"
 	"strings"
@@ -14,14 +15,16 @@ import (
 var _ fs.FS = (*dirFs)(nil)
 
 type dirFs struct {
-	root *encoding.CID
-	s5   *S5API
+	root   *encoding.CID
+	s5     *S5API
+	reqCtx context.Context
 }
 
 func (w *dirFs) Open(name string) (fs.File, error) {
-	file := w.s5.newFile(FileParams{
-		Hash: w.root.Hash.HashBytes(),
-		Type: w.root.Type,
+	file := w.s5.newFile(w.reqCtx, FileParams{
+		Context: w.s5.ctx,
+		Hash:    w.root.Hash.HashBytes(),
+		Type:    w.root.Type,
 	})
 
 	manifest, err := file.Manifest()
@@ -52,7 +55,7 @@ func (w *dirFs) openDirectly(name string, dir *metadata.DirectoryMetadata) (fs.F
 	subDir := dir.Directories.Get(name)
 
 	if file != nil {
-		return w.s5.newFile(FileParams{
+		return w.s5.newFile(w.reqCtx, FileParams{
 			Hash: file.File.CID().Hash.HashBytes(),
 			Type: file.File.CID().Type,
 			Name: file.Name,
@@ -65,7 +68,7 @@ func (w *dirFs) openDirectly(name string, dir *metadata.DirectoryMetadata) (fs.F
 			return nil, err
 		}
 
-		return w.s5.newFile(FileParams{
+		return w.s5.newFile(w.reqCtx, FileParams{
 			Hash: cid.Hash.HashBytes(),
 			Type: cid.Type,
 			Name: name,
@@ -73,7 +76,7 @@ func (w *dirFs) openDirectly(name string, dir *metadata.DirectoryMetadata) (fs.F
 	}
 
 	if name == "." {
-		return w.s5.newFile(FileParams{
+		return w.s5.newFile(w.reqCtx, FileParams{
 			Hash: w.root.Hash.HashBytes(),
 			Type: w.root.Type,
 			Name: name,
@@ -96,7 +99,7 @@ func (w dirFs) openNestedDir(name string, remainingPath string, dir *metadata.Di
 		return nil, err
 	}
 
-	nestedFs := newDirFs(cid, w.s5)
+	nestedFs := newDirFs(cid, w.s5, w.reqCtx)
 
 	return nestedFs.Open(remainingPath)
 
@@ -106,7 +109,7 @@ func (w *dirFs) resolveDirCid(dir *metadata.DirectoryReference) (*encoding.CID, 
 	return ResolveDirCid(dir, w.s5.getNode())
 }
 
-func newDirFs(root *encoding.CID, s5 *S5API) *dirFs {
+func newDirFs(root *encoding.CID, s5 *S5API, reqCtx context.Context) *dirFs {
 	return &dirFs{
 		root: root,
 		s5:   s5,

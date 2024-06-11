@@ -227,11 +227,11 @@ func (s *S5API) handleDnsLinkRaw(w http.ResponseWriter, r *http.Request, cid *en
 }
 
 func (s *S5API) handleDnsLinkWebapp(w http.ResponseWriter, r *http.Request, cid *encoding.CID) {
-	http.FileServer(http.FS(newWebAppFs(cid, s))).ServeHTTP(w, r)
+	http.FileServer(http.FS(newWebAppFs(cid, s, r.Context()))).ServeHTTP(w, r)
 }
 
 func (s *S5API) handleDnsLinkDirectory(w http.ResponseWriter, r *http.Request, cid *encoding.CID) {
-	http.FileServer(http.FS(newDirFs(cid, s))).ServeHTTP(w, r)
+	http.FileServer(http.FS(newDirFs(cid, s, r.Context()))).ServeHTTP(w, r)
 }
 
 type s5TusJwtResponseWriter struct {
