@@ -38,6 +38,7 @@ type S5File struct {
 	read     bool
 	tus      *s5.TusHandler
 	ctx      core.Context
+	reqCtx   context.Context
 	name     string
 	root     []byte
 	rootType types.CIDType
@@ -61,19 +62,21 @@ func (f *S5File) Info() (fs.FileInfo, error) {
 }
 
 type FileParams struct {
-	Context  core.Context
-	Hash     []byte
-	Type     types.CIDType
-	Protocol *s5.S5Protocol
-	Tus      *s5.TusHandler
-	Name     string
-	Root     []byte
-	RootType types.CIDType
+	Context    core.Context
+	ReqContext context.Context
+	Hash       []byte
+	Type       types.CIDType
+	Protocol   *s5.S5Protocol
+	Tus        *s5.TusHandler
+	Name       string
+	Root       []byte
+	RootType   types.CIDType
 }
 
 func NewFile(params FileParams) *S5File {
 	return &S5File{
 		ctx:      params.Context,
+		reqCtx:   params.ReqContext,
 		storage:  params.Context.Services().Storage(),
 		metadata: params.Context.Services().Metadata(),
 		hash:     params.Hash,
@@ -87,8 +90,7 @@ func NewFile(params FileParams) *S5File {
 }
 
 func (f *S5File) Exists() bool {
-	ctx := context.Background()
-	exists, _ := f.tus.UploadHashExists(ctx, f.hash)
+	exists, _ := f.tus.UploadHashExists(f.reqCtx, f.hash)
 
 	if exists {
 		return true
@@ -154,7 +156,7 @@ func (f *S5File) Close() error {
 
 func (f *S5File) init(offset int64) error {
 	if f.reader == nil {
-		reader, err := f.tus.GetUploadReader(f.ctx, f.hash, offset)
+		reader, err := f.tus.GetUploadReader(f.reqCtx, f.hash, offset)
 
 		if err == nil {
 			f.reader = reader
@@ -419,11 +421,12 @@ func (f *S5File) ReadDir(n int) ([]fs.DirEntry, error) {
 
 		for _, file := range dir.Files.Items() {
 			entries = append(entries, NewFile(FileParams{
-				Context: f.ctx,
-				Hash:    file.File.CID().Hash.HashBytes(),
-				Type:    file.File.CID().Type,
-				Tus:     f.tus,
-				Name:    file.Name,
+				Context:    f.ctx,
+				ReqContext: f.reqCtx,
+				Hash:       file.File.CID().Hash.HashBytes(),
+				Type:       file.File.CID().Type,
+				Tus:        f.tus,
+				Name:       file.Name,
 			}))
 		}
 
@@ -433,10 +436,11 @@ func (f *S5File) ReadDir(n int) ([]fs.DirEntry, error) {
 				return nil, err
 			}
 			entries = append(entries, NewFile(FileParams{
-				Context: f.ctx,
-				Hash:    cid.Hash.HashBytes(),
-				Type:    cid.Type,
-				Name:    subDir.Name,
+				Context:    f.ctx,
+				ReqContext: f.reqCtx,
+				Hash:       cid.Hash.HashBytes(),
+				Type:       cid.Type,
+				Name:       subDir.Name,
 			}))
 		}
 

@@ -204,7 +204,7 @@ func (s *S5API) Handle(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *S5API) handleDnsLinkRaw(w http.ResponseWriter, r *http.Request, cid *encoding.CID) {
-	file := s.newFile(FileParams{
+	file := s.newFile(r.Context(), FileParams{
 		Hash: cid.Hash.HashBytes(),
 		Type: cid.Type,
 	})
@@ -1640,7 +1640,7 @@ func (s *S5API) downloadFile(w http.ResponseWriter, r *http.Request) {
 		typ = cidDecoded.Type
 	}
 
-	file := s.newFile(FileParams{
+	file := s.newFile(r.Context(), FileParams{
 		Hash: hashBytes,
 		Type: typ,
 	})
@@ -1742,8 +1742,9 @@ func (s *S5API) newStorageLocationProvider(hash *encoding.Multihash, excludeSelf
 	})
 }
 
-func (s *S5API) newFile(params FileParams) *S5File {
+func (s *S5API) newFile(ctx context.Context, params FileParams) *S5File {
 	params.Context = s.ctx
+	params.ReqContext = ctx
 	params.Protocol = s.protocol
 	params.Tus = s.tusHandler
 
