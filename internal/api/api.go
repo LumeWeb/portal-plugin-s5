@@ -2040,15 +2040,21 @@ func (s *S5API) Configure(router *mux.Router) error {
 
 	// Account API
 	accountRouter := router.PathPrefix("/s5/account").Subrouter()
+	accountRouterAuthed := accountRouter.PathPrefix("").Subrouter()
+
+	// Authed routes
+	accountRouterAuthed.Use(authMw)
+
+	accountRouterAuthed.HandleFunc("", s.accountInfo).Methods(http.MethodGet)
+	accountRouterAuthed.HandleFunc("/stats", s.accountStats).Methods(http.MethodGet)
+	accountRouterAuthed.HandleFunc("/pins.bin", s.accountPinsBinary).Methods(http.MethodGet)
+	accountRouterAuthed.HandleFunc("/pins", s.accountPins).Methods(http.MethodGet)
+
+	// Unauthed routes
 	accountRouter.HandleFunc("/register", s.accountRegisterChallenge).Methods(http.MethodGet)
 	accountRouter.HandleFunc("/register", s.accountRegister).Methods(http.MethodPost)
 	accountRouter.HandleFunc("/login", s.accountLoginChallenge).Methods(http.MethodGet)
 	accountRouter.HandleFunc("/login", s.accountLogin).Methods(http.MethodPost)
-	accountRouter.Use(authMw)
-	accountRouter.HandleFunc("", s.accountInfo).Methods(http.MethodGet)
-	accountRouter.HandleFunc("/stats", s.accountStats).Methods(http.MethodGet)
-	accountRouter.HandleFunc("/pins.bin", s.accountPinsBinary).Methods(http.MethodGet)
-	accountRouter.HandleFunc("/pins", s.accountPins).Methods(http.MethodGet)
 
 	// Upload API
 	uploadRouter := router.PathPrefix("/s5/upload").Subrouter()
