@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/hex"
 	"errors"
-	s5 "github.com/LumeWeb/portal-plugin-s5/internal/protocol"
-	"github.com/LumeWeb/portal/core"
+	s5 "go.lumeweb.com/portal-plugin-s5/internal/protocol"
+	"go.lumeweb.com/portal/core"
 	"io"
 	"io/fs"
 	"path"
@@ -14,10 +14,10 @@ import (
 	"strings"
 	"time"
 
-	s5libmetadata "github.com/LumeWeb/libs5-go/metadata"
+	s5libmetadata "go.lumeweb.com/libs5-go/metadata"
 
-	"github.com/LumeWeb/libs5-go/encoding"
-	"github.com/LumeWeb/libs5-go/types"
+	"go.lumeweb.com/libs5-go/encoding"
+	"go.lumeweb.com/libs5-go/types"
 )
 
 var _ io.ReadSeekCloser = (*S5File)(nil)

@@ -1,9 +1,9 @@
 package cron
 
 import (
-	"github.com/LumeWeb/portal-plugin-s5/internal/cron/define"
-	"github.com/LumeWeb/portal-plugin-s5/internal/cron/tasks"
-	"github.com/LumeWeb/portal/core"
+	"go.lumeweb.com/portal-plugin-s5/internal/cron/define"
+	"go.lumeweb.com/portal-plugin-s5/internal/cron/tasks"
+	"go.lumeweb.com/portal/core"
 )
 
 var _ core.CronableService = (*Cron)(nil)

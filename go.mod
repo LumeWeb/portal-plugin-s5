@@ -1,13 +1,10 @@
-module github.com/LumeWeb/portal-plugin-s5
+module go.lumeweb.com/portal-plugin-s5
 
 go 1.22.1
 
 toolchain go1.22.2
 
 require (
-	github.com/LumeWeb/httputil v0.0.0-20240601144746-504fd57b96e6
-	github.com/LumeWeb/libs5-go v0.0.0-20240606191331-125741e0f4a6
-	github.com/LumeWeb/portal v0.1.0-develop.3.0.20240611165859-14b4cf984c8b
 	github.com/aws/aws-sdk-go-v2 v1.27.2
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.55.1
 	github.com/ddo/rq v0.0.0-20190828174524-b3daa55fcaba
@@ -20,6 +17,9 @@ require (
 	github.com/tus/tusd-etcd3-locker v0.0.0-20200405122323-74aeca810256
 	github.com/tus/tusd/v2 v2.4.0
 	github.com/vmihailenco/msgpack/v5 v5.4.1
+	go.lumeweb.com/httputil v0.0.0-20240616192644-3d270a528d86
+	go.lumeweb.com/libs5-go v0.0.0-20240616210226-ffb7d91f2f3b
+	go.lumeweb.com/portal v0.1.0-develop.3.0.20240616191449-0923386a55bb
 	go.uber.org/zap v1.27.0
 	go.uber.org/zap/exp v0.2.0
 	golang.org/x/crypto v0.24.0

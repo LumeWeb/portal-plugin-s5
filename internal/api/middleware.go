@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/LumeWeb/portal/middleware"
 	"github.com/gorilla/mux"
+	"go.lumeweb.com/portal/middleware"
 	"net/http"
 )
 

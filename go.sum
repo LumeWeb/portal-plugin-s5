@@ -5,12 +5,6 @@ github.com/Acconut/go-httptest-recorder v1.0.0/go.mod h1:CwQyhTH1kq/gLyWiRieo7c0
 github.com/AfterShip/email-verifier v1.4.0 h1:DoQplvVFVhZUfS5fPiVnmCQDr5i1tv+ivUV0TFd2AZo=
 github.com/AfterShip/email-verifier v1.4.0/go.mod h1:JNPV1KZpTq4TArmss1NAOJsTD8JRa/ZElbCAJCEgikg=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/LumeWeb/httputil v0.0.0-20240601144746-504fd57b96e6 h1:joyRQ9XsrmQzVZqNDqbmgKFHY85gSwF+4hT2POenhQc=
-github.com/LumeWeb/httputil v0.0.0-20240601144746-504fd57b96e6/go.mod h1:u+QERcfCAfjXWR350270DOz+zZ6CRZdBN6IzDYTZCkw=
-github.com/LumeWeb/libs5-go v0.0.0-20240606191331-125741e0f4a6 h1:PkjzKGAEkD3s1TwKlibpvEZttF/v8opnH73WjtopoyI=
-github.com/LumeWeb/libs5-go v0.0.0-20240606191331-125741e0f4a6/go.mod h1:MhyAfjlWFP7j3w52AOP5pN1fM2w3mtTJUogwx1EllUY=
-github.com/LumeWeb/portal v0.1.0-develop.3.0.20240611165859-14b4cf984c8b h1:htrM2eNkn4uadBKwk17SAVzO1kj7WC4TsvHfG/PXTwc=
-github.com/LumeWeb/portal v0.1.0-develop.3.0.20240611165859-14b4cf984c8b/go.mod h1:O9k4tjuErowEZBXMMY1QbLD+wI1WXIlONuQwQu9rq0A=
 github.com/LumeWeb/tusd-etcd3-locker v0.0.0-20240510103936-0d66760cf053 h1:GhYSPWvtdQpg8SL+rIJBhyNwbd9XEMC7qsFrekYCj+g=
 github.com/LumeWeb/tusd-etcd3-locker v0.0.0-20240510103936-0d66760cf053/go.mod h1:oCkYMGOVR+cdsxDmGvM5CxOPL2RSeQ3139XZGGBYiPk=
 github.com/LumeWeb/tusd/v2 v2.2.3-0.20240531203802-3185ee9b16f8 h1:c5qiGsUnEeSYt+X4ixm1Hte4hateDVg14WhKJmZROb4=
@@ -523,6 +517,12 @@ go.etcd.io/etcd/client/pkg/v3 v3.5.14/go.mod h1:8uMgAokyG1czCtIdsq+AGyYQMvpIKnSv
 go.etcd.io/etcd/client/v3 v3.5.4/go.mod h1:ZaRkVgBZC+L+dLCjTcF1hRXpgZXQPOvnA/Ak/gq3kiY=
 go.etcd.io/etcd/client/v3 v3.5.14 h1:CWfRs4FDaDoSz81giL7zPpZH2Z35tbOrAJkkjMqOupg=
 go.etcd.io/etcd/client/v3 v3.5.14/go.mod h1:k3XfdV/VIHy/97rqWjoUzrj9tk7GgJGH9J8L4dNXmAk=
+go.lumeweb.com/httputil v0.0.0-20240616192644-3d270a528d86 h1:znILf2sTNf4KHA/Ot+mVxlYXOO59dLQ0IJkDNCj6kRw=
+go.lumeweb.com/httputil v0.0.0-20240616192644-3d270a528d86/go.mod h1:3aHem0Fj7dH1Kj+WgluoF0WlSyXyUCrJk4bvmdq/Fgs=
+go.lumeweb.com/libs5-go v0.0.0-20240616210226-ffb7d91f2f3b h1:PsHaGCy8tuI01fl8DVJsG7vkgIHHU6dD/TgNfJ8M/bM=
+go.lumeweb.com/libs5-go v0.0.0-20240616210226-ffb7d91f2f3b/go.mod h1:UTUWJJAn0qFASEj/h8ZnF+47yVAtSv9Ttsu21Avuxnw=
+go.lumeweb.com/portal v0.1.0-develop.3.0.20240616191449-0923386a55bb h1:a67IavwLdP/5BIEhaDMyJywbCIK/bCKAqYr37CoxR60=
+go.lumeweb.com/portal v0.1.0-develop.3.0.20240616191449-0923386a55bb/go.mod h1:MgCQScXlTxaBSwGoIPUNeWCNBDkA+3U/0PWO5XAgH7M=
 go.sia.tech/core v0.2.6 h1:JrbZwW4cPHCB2Q6TeqCsAj2GAFXrRqLq0q/GNevtnPU=
 go.sia.tech/core v0.2.6/go.mod h1:B7ooFH3F6cLjxQz6IX33kgjOY392Ava7pzpPeccagac=
 go.sia.tech/coreutils v0.0.5 h1:Jj03VrqAayYHgA9fwV13+X88WB+Wr1p8wuLw2B8d2FI=

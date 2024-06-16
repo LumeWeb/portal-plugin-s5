@@ -2,9 +2,8 @@ package protocol
 
 import (
 	"errors"
-	s5config "github.com/LumeWeb/libs5-go/config"
-	"github.com/LumeWeb/portal/config"
-	"github.com/samber/lo"
+	s5config "go.lumeweb.com/libs5-go/config"
+	"go.lumeweb.com/portal/config"
 )
 
 var _ config.Validator = (*Config)(nil)

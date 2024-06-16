@@ -2,11 +2,9 @@ package protocol
 
 import (
 	"context"
-	"github.com/LumeWeb/portal/core"
-	"github.com/LumeWeb/portal/db/models"
 	"github.com/tus/tusd/v2/pkg/handler"
-	"go.uber.org/zap"
-	"gorm.io/gorm"
+	"go.lumeweb.com/portal/core"
+	"go.lumeweb.com/portal/db/models"
 	"os"
 	"sync"
 	"time"

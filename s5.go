@@ -1,10 +1,10 @@
 package s5
 
 import (
-	"github.com/LumeWeb/portal-plugin-s5/internal/api"
-	"github.com/LumeWeb/portal-plugin-s5/internal/db"
-	"github.com/LumeWeb/portal-plugin-s5/internal/protocol"
-	"github.com/LumeWeb/portal/core"
+	"go.lumeweb.com/portal-plugin-s5/internal/api"
+	"go.lumeweb.com/portal-plugin-s5/internal/db"
+	"go.lumeweb.com/portal-plugin-s5/internal/protocol"
+	"go.lumeweb.com/portal/core"
 )
 
 func init() {

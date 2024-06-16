@@ -6,10 +6,10 @@ import (
 	"io/fs"
 	"strings"
 
-	"github.com/LumeWeb/libs5-go/node"
+	"go.lumeweb.com/libs5-go/node"
 
-	"github.com/LumeWeb/libs5-go/encoding"
-	"github.com/LumeWeb/libs5-go/metadata"
+	"go.lumeweb.com/libs5-go/encoding"
+	"go.lumeweb.com/libs5-go/metadata"
 )
 
 var _ fs.FS = (*dirFs)(nil)

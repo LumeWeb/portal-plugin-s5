@@ -1,12 +1,11 @@
 package api
 
 import (
-	"github.com/vmihailenco/msgpack/v5"
 	"time"
 
-	"github.com/LumeWeb/libs5-go/encoding"
-	"github.com/LumeWeb/libs5-go/types"
-	"github.com/LumeWeb/portal/db/models"
+	"go.lumeweb.com/libs5-go/encoding"
+	"go.lumeweb.com/libs5-go/types"
+	"go.lumeweb.com/portal/db/models"
 )
 
 var (

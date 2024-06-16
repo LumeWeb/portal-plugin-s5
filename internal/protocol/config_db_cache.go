@@ -2,8 +2,7 @@ package protocol
 
 import (
 	"errors"
-	"github.com/LumeWeb/portal/config"
-	"github.com/samber/lo"
+	"go.lumeweb.com/portal/config"
 )
 
 var _ config.ProtocolConfig = (*Config)(nil)
