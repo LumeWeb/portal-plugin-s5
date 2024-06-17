@@ -2,6 +2,7 @@ package protocol
 
 import (
 	"errors"
+	"github.com/samber/lo"
 	s5config "go.lumeweb.com/libs5-go/config"
 	"go.lumeweb.com/portal/config"
 )

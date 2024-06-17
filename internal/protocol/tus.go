@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/tus/tusd/v2/pkg/s3store"
 	"go.lumeweb.com/libs5-go/encoding"
 	"go.lumeweb.com/portal-plugin-s5/internal/cron/define"
@@ -11,6 +12,8 @@ import (
 	"go.lumeweb.com/portal/core"
 	"go.lumeweb.com/portal/db/models"
 	"go.lumeweb.com/portal/middleware"
+	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"io"
 	"log/slog"
 

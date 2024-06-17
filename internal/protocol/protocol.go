@@ -18,6 +18,7 @@ import (
 	"go.lumeweb.com/libs5-go/types"
 	"go.lumeweb.com/portal/config"
 	"go.lumeweb.com/portal/core"
+	"go.uber.org/zap"
 	"golang.org/x/crypto/hkdf"
 	"io"
 	"time"

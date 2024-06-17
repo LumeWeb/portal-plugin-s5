@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/ddo/rq"
 	"go.lumeweb.com/libs5-go/encoding"
 	"go.lumeweb.com/portal-plugin-s5/internal/cron/define"
@@ -12,6 +13,7 @@ import (
 	"go.lumeweb.com/portal/bao"
 	"go.lumeweb.com/portal/core"
 	"go.lumeweb.com/portal/db/models"
+	"go.uber.org/zap"
 	"io"
 	"net/http"
 )
@@ -145,7 +147,7 @@ func CronTaskPinImportProcessSmallFile(input any, ctx core.Context) error {
 	logger := ctx.Logger()
 	storage := ctx.Services().Storage()
 	_import := ctx.Services().Importer()
-	sync := ctx.Services().Syncer()
+	sync := ctx.Services().Sync()
 
 	parsedCid, err := encoding.CIDFromString(args.Cid)
 	if err != nil {
@@ -207,7 +209,7 @@ func CronTaskPinImportProcessLargeFile(input any, ctx core.Context) error {
 	logger := ctx.Logger()
 	storage := ctx.Services().Storage()
 	_import := ctx.Services().Importer()
-	sync := ctx.Services().Syncer()
+	sync := ctx.Services().Sync()
 
 	parsedCid, err := encoding.CIDFromString(args.Cid)
 	if err != nil {
