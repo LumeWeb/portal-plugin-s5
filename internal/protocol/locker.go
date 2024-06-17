@@ -5,6 +5,8 @@ import (
 	"github.com/tus/tusd/v2/pkg/handler"
 	"go.lumeweb.com/portal/core"
 	"go.lumeweb.com/portal/db/models"
+	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"os"
 	"sync"
 	"time"
