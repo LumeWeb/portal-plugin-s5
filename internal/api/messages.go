@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/vmihailenco/msgpack/v5"
 	"time"
 
 	"go.lumeweb.com/libs5-go/encoding"
