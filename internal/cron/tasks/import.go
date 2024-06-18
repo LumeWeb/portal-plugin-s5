@@ -28,7 +28,7 @@ func pinImportCloseBody(body io.ReadCloser, ctx core.Context) {
 
 func pinImportFetchAndProcess(fetchUrl string, progressStage int, ctx core.Context, cid *encoding.CID) ([]byte, error) {
 	logger := ctx.Logger()
-	_import := ctx.Services().Importer()
+	_import := ctx.Service(core.IMPORT_SERVICE).(core.ImportService)
 	req, err := rq.Get(fetchUrl).ParseRequest()
 	if err != nil {
 		logger.Error("error parsing request", zap.Error(err))
@@ -64,9 +64,9 @@ func pinImportFetchAndProcess(fetchUrl string, progressStage int, ctx core.Conte
 }
 
 func pinImportSaveAndPin(upload *core.UploadMetadata, ctx core.Context, cid *encoding.CID, userId uint) error {
-	_import := ctx.Services().Importer()
-	metadata := ctx.Services().Metadata()
-	pin := ctx.Services().Pin()
+	_import := ctx.Service(core.IMPORT_SERVICE).(core.ImportService)
+	metadata := ctx.Service(core.METADATA_SERVICE).(core.MetadataService)
+	pin := ctx.Service(core.PIN_SERVICE).(core.PinService)
 
 	err := _import.UpdateProgress(ctx, cid.Hash.HashBytes(), 3, totalPinImportStages)
 	if err != nil {
@@ -98,8 +98,8 @@ func CronTaskPinImportValidate(input any, ctx core.Context) error {
 
 	config := ctx.Config()
 	logger := ctx.Logger()
-	_import := ctx.Services().Importer()
-	crn := ctx.Services().Cron()
+	_import := ctx.Service(core.IMPORT_SERVICE).(core.ImportService)
+	crn := ctx.Service(core.CRON_SERVICE).(core.CronService)
 
 	// Parse CID early to avoid unnecessary operations if it fails.
 	parsedCid, err := encoding.CIDFromString(args.Cid)
@@ -145,9 +145,9 @@ func CronTaskPinImportProcessSmallFile(input any, ctx core.Context) error {
 	}
 
 	logger := ctx.Logger()
-	storage := ctx.Services().Storage()
-	_import := ctx.Services().Importer()
-	sync := ctx.Services().Sync()
+	storage := ctx.Service(core.STORAGE_SERVICE).(core.StorageService)
+	_import := ctx.Service(core.IMPORT_SERVICE).(core.ImportService)
+	sync := ctx.Service(core.SYNC_SERVICE).(core.SyncService)
 
 	parsedCid, err := encoding.CIDFromString(args.Cid)
 	if err != nil {
@@ -175,9 +175,10 @@ func CronTaskPinImportProcessSmallFile(input any, ctx core.Context) error {
 		return err
 	}
 
-	proto, err := core.GetProtocol("s5")
-	if err != nil {
-		return err
+	proto := core.GetProtocol("s5")
+
+	if proto == nil {
+		return errors.New("protocol not found")
 	}
 
 	upload, err := storage.UploadObject(ctx, protocol.GetStorageProtocol(proto), bytes.NewReader(fileData), parsedCid.Size, nil, hash)
@@ -207,9 +208,9 @@ func CronTaskPinImportProcessLargeFile(input any, ctx core.Context) error {
 
 	config := ctx.Config()
 	logger := ctx.Logger()
-	storage := ctx.Services().Storage()
-	_import := ctx.Services().Importer()
-	sync := ctx.Services().Sync()
+	storage := ctx.Service(core.STORAGE_SERVICE).(core.StorageService)
+	_import := ctx.Service(core.IMPORT_SERVICE).(core.ImportService)
+	sync := ctx.Service(core.SYNC_SERVICE).(core.SyncService)
 
 	parsedCid, err := encoding.CIDFromString(args.Cid)
 	if err != nil {
@@ -275,9 +276,10 @@ func CronTaskPinImportProcessLargeFile(input any, ctx core.Context) error {
 		return err
 	}
 
-	proto, err := core.GetProtocol("s5")
-	if err != nil {
-		return err
+	proto := core.GetProtocol("s5")
+
+	if proto == nil {
+		return errors.New("protocol not found")
 	}
 
 	storageProtocol := protocol.GetStorageProtocol(proto)

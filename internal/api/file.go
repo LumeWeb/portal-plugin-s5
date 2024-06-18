@@ -77,8 +77,8 @@ func NewFile(params FileParams) *S5File {
 	return &S5File{
 		ctx:      params.Context,
 		reqCtx:   params.ReqContext,
-		storage:  params.Context.Services().Storage(),
-		metadata: params.Context.Services().Metadata(),
+		storage:  params.Context.Service(core.STORAGE_SERVICE).(core.StorageService),
+		metadata: params.Context.Service(core.METADATA_SERVICE).(core.MetadataService),
 		hash:     params.Hash,
 		typ:      params.Type,
 		protocol: params.Protocol,

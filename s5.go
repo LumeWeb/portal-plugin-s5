@@ -8,20 +8,16 @@ import (
 )
 
 func init() {
-	core.RegisterPlugin(factory)
-}
-
-func factory() core.PluginInfo {
-	return core.PluginInfo{
+	core.RegisterPlugin(core.PluginInfo{
 		ID: "s5",
-		GetAPI: func(ctx *core.Context) (core.API, error) {
-			return api.NewS5API(*ctx), nil
+		API: func() (core.API, []core.ContextBuilderOption, error) {
+			return api.NewS5API()
 		},
-		GetProtocol: func(ctx *core.Context) (core.Protocol, error) {
-			return protocol.NewS5Protocol(*ctx)
+		Protocol: func() (core.Protocol, []core.ContextBuilderOption, error) {
+			return protocol.NewS5Protocol()
 		},
 		Models: []any{
 			&db.S5Challenge{},
 		},
-	}
+	})
 }
