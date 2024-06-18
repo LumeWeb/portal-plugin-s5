@@ -11,6 +11,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/ddo/rq"
+	"github.com/gorilla/mux"
+	"github.com/vmihailenco/msgpack/v5"
 	"go.lumeweb.com/httputil"
 	"go.lumeweb.com/libs5-go/encoding"
 	s5libmetadata "go.lumeweb.com/libs5-go/metadata"
@@ -19,18 +22,15 @@ import (
 	s5storage "go.lumeweb.com/libs5-go/storage"
 	"go.lumeweb.com/libs5-go/storage/provider"
 	"go.lumeweb.com/libs5-go/types"
+	"go.lumeweb.com/portal-plugin-s5/internal/cron/define"
+	"go.lumeweb.com/portal-plugin-s5/internal/db"
+	s5 "go.lumeweb.com/portal-plugin-s5/internal/protocol"
 	"go.lumeweb.com/portal/bao"
 	"go.lumeweb.com/portal/config"
 	"go.lumeweb.com/portal/core"
 	"go.lumeweb.com/portal/db/models"
 	"go.lumeweb.com/portal/middleware"
 	"go.lumeweb.com/portal/middleware/swagger"
-	"github.com/ddo/rq"
-	"github.com/gorilla/mux"
-	"github.com/vmihailenco/msgpack/v5"
-	"go.lumeweb.com/portal-plugin-s5/internal/cron/define"
-	"go.lumeweb.com/portal-plugin-s5/internal/db"
-	s5 "go.lumeweb.com/portal-plugin-s5/internal/protocol"
 	"io"
 	"math"
 	"mime"
@@ -42,7 +42,6 @@ import (
 	"strconv"
 	"strings"
 
-	"go.lumeweb.com/libs5-go/node"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/dnslink-std/go"
@@ -50,6 +49,7 @@ import (
 	muxHandlers "github.com/gorilla/handlers"
 	"github.com/rs/cors"
 	"github.com/samber/lo"
+	"go.lumeweb.com/libs5-go/node"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"nhooyr.io/websocket"
@@ -84,37 +84,46 @@ type S5API struct {
 	tusHandler *s5.TusHandler
 }
 
-func NewS5API(ctx core.Context) *S5API {
-	return &S5API{
-		ctx:      ctx,
-		config:   ctx.Config(),
-		user:     ctx.Services().User(),
-		auth:     ctx.Services().Auth(),
-		pin:      ctx.Services().Pin(),
-		storage:  ctx.Services().Storage(),
-		metadata: ctx.Services().Metadata(),
-		db:       ctx.DB(),
-		logger:   ctx.Logger(),
-		cron:     ctx.Services().Cron(),
-		_import:  ctx.Services().Importer(),
-		sync:     ctx.Services().Sync(),
-		dnslink:  ctx.Services().DNSLink(),
-	}
+func NewS5API() (*S5API, []core.ContextBuilderOption, error) {
+	api := &S5API{}
+
+	opts := core.ContextOptions(
+		core.ContextWithStartupFunc(func(ctx core.Context) error {
+			api.ctx = ctx
+			api.config = ctx.Config()
+			api.user = ctx.Service(core.USER_SERVICE).(core.UserService)
+			api.auth = ctx.Service(core.AUTH_SERVICE).(core.AuthService)
+			api.pin = ctx.Service(core.PIN_SERVICE).(core.PinService)
+			api.storage = ctx.Service(core.STORAGE_SERVICE).(core.StorageService)
+			api.metadata = ctx.Service(core.METADATA_SERVICE).(core.MetadataService)
+			api.db = ctx.DB()
+			api.logger = ctx.Logger()
+			api.cron = ctx.Service(core.CRON_SERVICE).(core.CronService)
+			api._import = ctx.Service(core.IMPORT_SERVICE).(core.ImportService)
+			api.sync = ctx.Service(core.SYNC_SERVICE).(core.SyncService)
+			api.dnslink = ctx.Service(core.DNSLINK_SERVICE).(core.DNSLinkService)
+
+			return nil
+		}),
+	)
+
+	return api, opts, nil
 }
 
 func (s S5API) Subdomain() string {
 	return "s5"
 }
 
-func (s *S5API) Init(_ *core.Context) error {
-	proto, err := core.GetProtocol(protocolName)
-	if err != nil {
-		return err
+func (s *S5API) Init() ([]core.ContextBuilderOption, error) {
+	proto := core.GetProtocol(protocolName)
+
+	if proto == nil {
+		return nil, errors.New("protocol not found")
 	}
 
 	s.protocol = proto.(*s5.S5Protocol)
 	s.tusHandler = proto.(*s5.S5Protocol).TusHandler()
-	return nil
+	return nil, nil
 }
 
 func (s *S5API) Can(_ http.ResponseWriter, r *http.Request) bool {

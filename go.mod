@@ -5,8 +5,8 @@ go 1.22.1
 toolchain go1.22.2
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.27.2
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.55.1
+	github.com/aws/aws-sdk-go-v2 v1.28.0
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.55.2
 	github.com/ddo/rq v0.0.0-20190828174524-b3daa55fcaba
 	github.com/dnslink-std/go v0.6.0
 	github.com/gabriel-vasile/mimetype v1.4.4
@@ -19,7 +19,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	go.lumeweb.com/httputil v0.0.0-20240616192644-3d270a528d86
 	go.lumeweb.com/libs5-go v0.0.0-20240616210226-ffb7d91f2f3b
-	go.lumeweb.com/portal v0.1.0-develop.3.0.20240616191449-0923386a55bb
+	go.lumeweb.com/portal v0.1.0-develop.3.0.20240618085519-ee48921afecf
 	go.uber.org/zap v1.27.0
 	go.uber.org/zap/exp v0.2.0
 	golang.org/x/crypto v0.24.0
@@ -31,13 +31,13 @@ require (
 	github.com/AfterShip/email-verifier v1.4.0 // indirect
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.2 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.9 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.9 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.9 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.10 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.6.10 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.10 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.11.2 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.3.11 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.11.11 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.17.9 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.3.12 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.11.12 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.17.10 // indirect
 	github.com/aws/smithy-go v1.20.2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/boombuler/barcode v1.0.1 // indirect
@@ -51,7 +51,7 @@ require (
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/getkin/kin-openapi v0.118.0 // indirect
+	github.com/getkin/kin-openapi v0.125.0 // indirect
 	github.com/go-co-op/gocron/v2 v2.5.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
@@ -91,6 +91,7 @@ require (
 	github.com/redis/go-redis/v9 v9.5.3 // indirect
 	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/shopspring/decimal v1.4.0 // indirect
+	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	gitlab.com/NebulousLabs/errors v0.0.0-20200929122200-06c536cf6975 // indirect
 	gitlab.com/NebulousLabs/fastrand v0.0.0-20181126182046-603482d69e40 // indirect
@@ -99,8 +100,8 @@ require (
 	go.etcd.io/etcd/api/v3 v3.5.14 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.14 // indirect
 	go.etcd.io/etcd/client/v3 v3.5.14 // indirect
-	go.sia.tech/core v0.2.6 // indirect
-	go.sia.tech/coreutils v0.0.5 // indirect
+	go.sia.tech/core v0.2.7 // indirect
+	go.sia.tech/coreutils v0.0.6 // indirect
 	go.sia.tech/mux v1.2.0 // indirect
 	go.sia.tech/renterd v1.0.7 // indirect
 	go.sia.tech/siad v1.5.10-0.20230228235644-3059c0b930ca // indirect

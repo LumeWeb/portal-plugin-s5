@@ -38,9 +38,10 @@ func closeReader(reader io.ReadCloser, ctx core.Context) {
 }
 
 func cronTaskTusGetUpload(ctx core.Context, id string) (*models.TusUpload, handler.Upload, *handler.FileInfo, error) {
-	proto, err := core.GetProtocol("s5")
-	if err != nil {
-		return nil, nil, nil, err
+	proto := core.GetProtocol("s5")
+
+	if proto == nil {
+		return nil, nil, nil, errors.New("protocol not found")
 	}
 
 	tus := proto.(*protocol.S5Protocol).TusHandler()
@@ -76,8 +77,8 @@ func CronTaskTusUploadVerify(input any, ctx core.Context) error {
 	}
 
 	logger := ctx.Logger()
-	storage := ctx.Services().Storage()
-	crn := ctx.Services().Cron()
+	storage := ctx.Service(core.STORAGE_SERVICE).(core.StorageService)
+	crn := ctx.Service(core.CRON_SERVICE).(core.CronService)
 
 	upload, tusUpload, info, err := cronTaskTusGetUpload(ctx, args.Id)
 	if err != nil {
@@ -126,14 +127,15 @@ func CronTaskTusUploadProcess(input any, ctx core.Context) error {
 		return err
 	}
 
-	pin := ctx.Services().Pin()
-	storage := ctx.Services().Storage()
+	pin := ctx.Service(core.PIN_SERVICE).(core.PinService)
+	storage := ctx.Service(core.STORAGE_SERVICE).(core.StorageService)
 	logger := ctx.Logger()
-	metadata := ctx.Services().Metadata()
-	crn := ctx.Services().Cron()
-	proto, err := core.GetProtocol("s5")
-	if err != nil {
-		return err
+	metadata := ctx.Service(core.METADATA_SERVICE).(core.MetadataService)
+	crn := ctx.Service(core.CRON_SERVICE).(core.CronService)
+	proto := core.GetProtocol("s5")
+
+	if proto == nil {
+		return errors.New("protocol not found")
 	}
 
 	tus := proto.(*protocol.S5Protocol)
@@ -225,16 +227,17 @@ func CronTaskTusUploadCleanup(input any, ctx core.Context) error {
 		return err
 	}
 
-	proto, err := core.GetProtocol("s5")
-	if err != nil {
-		return err
+	proto := core.GetProtocol("s5")
+
+	if proto == nil {
+		return errors.New("protocol not found")
 	}
 
 	tus := proto.(*protocol.S5Protocol).TusHandler()
 	config := ctx.Config()
 	logger := ctx.Logger()
-	metadata := ctx.Services().Metadata()
-	pin := ctx.Services().Pin()
+	metadata := ctx.Service(core.METADATA_SERVICE).(core.MetadataService)
+	pin := ctx.Service(core.PIN_SERVICE).(core.PinService)
 
 	s3InfoId, _ := splitS3Ids(upload.UploadID)
 
@@ -289,13 +292,14 @@ func CronTaskTusUploadCleanup(input any, ctx core.Context) error {
 	return nil
 }
 func waitForUploadCompletion(ctx core.Context, hash []byte) error {
-	proto, err := core.GetProtocol("s5")
-	if err != nil {
-		return err
+	proto := core.GetProtocol("s5")
+
+	if proto == nil {
+		return errors.New("protocol not found")
 	}
 
 	tus := proto.(*protocol.S5Protocol)
-	storage := ctx.Services().Storage()
+	storage := ctx.Service(core.STORAGE_SERVICE).(core.StorageService)
 
 	for {
 		status, err := storage.UploadStatus(ctx, tus.StorageProtocol(), tus.StorageProtocol().EncodeFileName(hash))

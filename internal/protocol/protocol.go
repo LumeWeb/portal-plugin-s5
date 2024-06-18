@@ -50,38 +50,53 @@ func (s *S5Protocol) TusHandler() *TusHandler {
 	return s.tusHandler
 }
 
-func NewS5Protocol(ctx core.Context) (*S5Protocol, error) {
+func NewS5Protocol() (*S5Protocol, []core.ContextBuilderOption, error) {
+
+	handler, handlerOpts := NewTusHandler()
+
 	proto := &S5Protocol{
-		portalConfig: ctx.Config(),
-		logger:       ctx.Logger(),
-		storage:      ctx.Services().Storage(),
-		tusHandler:   NewTusHandler(ctx),
+		tusHandler: handler,
 	}
 
 	cfg, err := configureS5Protocol(proto)
+
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	params := s5service.ServiceParams{
-		Logger: proto.logger.Logger,
-		Config: cfg,
-		Db:     cfg.DB,
-	}
+	opts := core.ContextOptions(
+		core.ContextWithStartupFunc(func(ctx core.Context) error {
+			proto.portalConfig = ctx.Config()
+			proto.logger = ctx.Logger()
+			proto.storage = ctx.Service(core.STORAGE_SERVICE).(core.StorageService)
+			return nil
+		}),
+		core.ContextWithStartupFunc(func(ctx core.Context) error {
+			params := s5service.ServiceParams{
+				Logger: proto.logger.Logger,
+				Config: cfg,
+				Db:     cfg.DB,
+			}
 
-	node := s5node.NewNode(cfg, s5node.NewServices(
-		s5node.ServicesParams{
-			P2P:      s5services.NewP2P(params),
-			Registry: s5services.NewRegistry(params),
-			HTTP:     s5services.NewHTTP(params),
-			Storage:  s5services.NewStorage(params),
-		},
-	))
+			node := s5node.NewNode(cfg, s5node.NewServices(
+				s5node.ServicesParams{
+					P2P:      s5services.NewP2P(params),
+					Registry: s5services.NewRegistry(params),
+					HTTP:     s5services.NewHTTP(params),
+					Storage:  s5services.NewStorage(params),
+				},
+			))
 
-	proto.store = NewS5ProviderStore(ctx, proto.tusHandler)
-	proto.node = node
+			proto.store = NewS5ProviderStore(ctx, proto.tusHandler)
+			proto.node = node
 
-	return proto, nil
+			return nil
+		}),
+	)
+
+	opts = append(opts, handlerOpts...)
+
+	return proto, opts, nil
 }
 
 func configureS5Protocol(proto *S5Protocol) (*s5config.NodeConfig, error) {
@@ -138,7 +153,7 @@ func NewS5ProviderStore(ctx core.Context, tus *TusHandler) *S5ProviderStore {
 		config:   ctx.Config(),
 		logger:   ctx.Logger(),
 		tus:      tus,
-		metadata: ctx.Services().Metadata(),
+		metadata: ctx.Service(core.METADATA_SERVICE).(core.MetadataService),
 	}
 }
 

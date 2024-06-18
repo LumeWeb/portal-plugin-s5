@@ -42,24 +42,28 @@ type TusHandler struct {
 	storageProtocol core.StorageProtocol
 }
 
-func NewTusHandler(ctx core.Context) *TusHandler {
-	th := &TusHandler{
-		ctx:      ctx,
-		config:   ctx.Config(),
-		db:       ctx.DB(),
-		logger:   ctx.Logger(),
-		cron:     ctx.Services().Cron(),
-		storage:  ctx.Services().Storage(),
-		users:    ctx.Services().User(),
-		metadata: ctx.Services().Metadata(),
-	}
+func NewTusHandler() (*TusHandler, []core.ContextBuilderOption) {
+	th := &TusHandler{}
 
-	ctx.OnStartup(func(context core.Context) error {
-		go th.worker()
-		return nil
-	})
+	opts := core.ContextOptions(
+		core.ContextWithStartupFunc(func(context core.Context) error {
+			th.ctx = context
+			th.config = context.Config()
+			th.db = context.DB()
+			th.logger = context.Logger()
+			th.cron = context.Service(core.CRON_SERVICE).(core.CronService)
+			th.storage = context.Service(core.STORAGE_SERVICE).(core.StorageService)
+			th.users = context.Service(core.USER_SERVICE).(core.UserService)
+			th.metadata = context.Service(core.METADATA_SERVICE).(core.MetadataService)
+			return nil
+		}),
+		core.ContextWithStartupFunc(func(context core.Context) error {
+			go th.worker()
+			return nil
+		}),
+	)
 
-	return th
+	return th, opts
 }
 
 func (t *TusHandler) Init() error {
