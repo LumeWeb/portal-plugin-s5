@@ -1,6 +1,7 @@
 package s5
 
 import (
+	"go.lumeweb.com/portal-plugin-s5/internal"
 	"go.lumeweb.com/portal-plugin-s5/internal/api"
 	"go.lumeweb.com/portal-plugin-s5/internal/db"
 	"go.lumeweb.com/portal-plugin-s5/internal/protocol"
@@ -9,7 +10,7 @@ import (
 
 func init() {
 	core.RegisterPlugin(core.PluginInfo{
-		ID: "s5",
+		ID: internal.ProtocolName,
 		API: func() (core.API, []core.ContextBuilderOption, error) {
 			return api.NewS5API()
 		},
