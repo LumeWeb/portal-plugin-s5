@@ -398,7 +398,7 @@ func (t *TusHandler) worker() {
 }
 
 func getLockerMode(cm config.Manager, logger *core.Logger) string {
-	cfg := cm.Config().Protocol["s5"].(*Config)
+	cfg := cm.GetProtocol("s5").(*Config)
 
 	switch cfg.TUSLockerMode {
 	case "", "none":
