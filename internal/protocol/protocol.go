@@ -16,6 +16,7 @@ import (
 	s5services "go.lumeweb.com/libs5-go/service/default"
 	s5storage "go.lumeweb.com/libs5-go/storage"
 	"go.lumeweb.com/libs5-go/types"
+	syncTypes "go.lumeweb.com/portal-plugin-sync/types"
 	"go.lumeweb.com/portal/config"
 	"go.lumeweb.com/portal/core"
 	"go.uber.org/zap"
@@ -32,7 +33,7 @@ var (
 	_ core.ProtocolInit       = (*S5Protocol)(nil)
 	_ core.ProtocolStart      = (*S5Protocol)(nil)
 	_ core.ProtocolStop       = (*S5Protocol)(nil)
-	_ core.SyncProtocol       = (*S5Protocol)(nil)
+	_ syncTypes.SyncProtocol  = (*S5Protocol)(nil)
 	_ core.StorageProtocol    = (*S5Protocol)(nil)
 )
 
