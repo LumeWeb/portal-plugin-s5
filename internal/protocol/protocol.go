@@ -16,6 +16,7 @@ import (
 	s5services "go.lumeweb.com/libs5-go/service/default"
 	s5storage "go.lumeweb.com/libs5-go/storage"
 	"go.lumeweb.com/libs5-go/types"
+	"go.lumeweb.com/portal-plugin-s5/internal"
 	syncTypes "go.lumeweb.com/portal-plugin-sync/types"
 	"go.lumeweb.com/portal/config"
 	"go.lumeweb.com/portal/core"
@@ -59,17 +60,23 @@ func NewS5Protocol() (*S5Protocol, []core.ContextBuilderOption, error) {
 		tusHandler: handler,
 	}
 
-	cfg, err := configureS5Protocol(proto)
-
-	if err != nil {
-		return nil, nil, err
-	}
+	var cfg *s5config.NodeConfig
 
 	opts := core.ContextOptions(
 		core.ContextWithStartupFunc(func(ctx core.Context) error {
 			proto.portalConfig = ctx.Config()
 			proto.logger = ctx.Logger()
 			proto.storage = ctx.Service(core.STORAGE_SERVICE).(core.StorageService)
+			return nil
+		}),
+		core.ContextWithStartupFunc(func(ctx core.Context) error {
+			var err error
+			cfg, err = configureS5Protocol(proto)
+
+			if err != nil {
+				return err
+			}
+
 			return nil
 		}),
 		core.ContextWithStartupFunc(func(ctx core.Context) error {
@@ -101,14 +108,11 @@ func NewS5Protocol() (*S5Protocol, []core.ContextBuilderOption, error) {
 }
 
 func configureS5Protocol(proto *S5Protocol) (*s5config.NodeConfig, error) {
-	cfg := proto.Config().(*Config)
+	var err error
+
 	cm := proto.portalConfig
 	portalCfg := cm.Config()
-
-	err := cm.ConfigureProtocol(proto.Name(), cfg)
-	if err != nil {
-		return nil, err
-	}
+	cfg := cm.GetProtocol(internal.ProtocolName).(*Config)
 
 	cfg.HTTP.API.Domain = fmt.Sprintf("s5.%s", portalCfg.Core.Domain)
 
@@ -121,7 +125,7 @@ func configureS5Protocol(proto *S5Protocol) (*s5config.NodeConfig, error) {
 	hasher := hkdf.New(sha256.New, portalCfg.Core.Identity.PrivateKey(), nil, []byte("s5"))
 	derivedSeed := make([]byte, 32)
 
-	if _, err := io.ReadFull(hasher, derivedSeed); err != nil {
+	if _, err = io.ReadFull(hasher, derivedSeed); err != nil {
 		proto.logger.Fatal("Failed to generate child key seed", zap.Error(err))
 		return nil, err
 	}
