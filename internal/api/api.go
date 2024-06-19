@@ -110,6 +110,10 @@ func NewS5API() (*S5API, []core.ContextBuilderOption, error) {
 	return api, opts, nil
 }
 
+func (s S5API) Config() config.APIConfig {
+	return nil
+}
+
 func (s S5API) Subdomain() string {
 	return "s5"
 }
