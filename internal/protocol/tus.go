@@ -58,6 +58,13 @@ func NewTusHandler() (*TusHandler, []core.ContextBuilderOption) {
 			return nil
 		}),
 		core.ContextWithStartupFunc(func(context core.Context) error {
+			err := th.Init()
+			if err != nil {
+				return err
+			}
+			return nil
+		}),
+		core.ContextWithStartupFunc(func(context core.Context) error {
 			go th.worker()
 			return nil
 		}),
