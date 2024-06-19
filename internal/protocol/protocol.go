@@ -31,7 +31,6 @@ const ETCD_DB_PREFIX = "s5-db"
 var (
 	_ s5storage.ProviderStore = (*S5ProviderStore)(nil)
 	_ core.Protocol           = (*S5Protocol)(nil)
-	_ core.ProtocolInit       = (*S5Protocol)(nil)
 	_ core.ProtocolStart      = (*S5Protocol)(nil)
 	_ core.ProtocolStop       = (*S5Protocol)(nil)
 	_ syncTypes.SyncProtocol  = (*S5Protocol)(nil)
@@ -162,7 +161,7 @@ func NewS5ProviderStore(ctx core.Context, tus *TusHandler) *S5ProviderStore {
 	}
 }
 
-func (s *S5Protocol) Init(ctx *core.Context) error {
+func (s *S5Protocol) init(ctx *core.Context) error {
 	s.node.Services().Storage().SetProviderStore(s.store)
 
 	err := s.node.Init(*ctx)
@@ -180,7 +179,12 @@ func (s *S5Protocol) Init(ctx *core.Context) error {
 	return nil
 }
 func (s *S5Protocol) Start(ctx core.Context) error {
-	err := s.node.Start(ctx)
+	err := s.init(&ctx)
+	if err != nil {
+		return err
+	}
+
+	err = s.node.Start(ctx)
 	if err != nil {
 		return err
 	}
