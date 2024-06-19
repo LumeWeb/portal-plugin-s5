@@ -370,7 +370,7 @@ func GetStorageProtocol(obj any) core.StorageProtocol {
 }
 
 func getDbMode(cm config.Manager) string {
-	cfg := cm.Config().Protocol["s5"].(*Config)
+	cfg := cm.GetProtocol("s5").(*Config)
 
 	switch cfg.Db.Type {
 	case "db":
@@ -387,7 +387,7 @@ func getDbMode(cm config.Manager) string {
 }
 
 func getDbCacheMode(cm config.Manager) string {
-	cfg := cm.Config().Protocol["s5"].(*Config)
+	cfg := cm.GetProtocol("s5").(*Config)
 
 	switch cfg.Db.Cache.Type {
 	case "lru":
@@ -398,7 +398,7 @@ func getDbCacheMode(cm config.Manager) string {
 }
 
 func getDbCache(cm config.Manager) (s5db.Cache, error) {
-	cfg := cm.Config().Protocol["s5"].(*Config)
+	cfg := cm.GetProtocol("s5").(*Config)
 
 	switch cfg.Db.Cache.Type {
 	case "lru":
@@ -418,7 +418,7 @@ func getDb(cm config.Manager, logger *core.Logger) (s5db.KVStore, error) {
 
 	switch mode {
 	case "db":
-		cfg := cm.Config().Protocol["s5"].(*Config)
+		cfg := cm.GetProtocol("s5").(*Config)
 		return s5db.NewBboltDBKVStore(cfg.Db.DbPath, cache), nil
 	case "etcd":
 		client, err := cm.Config().Core.Clustered.Etcd.Client()
