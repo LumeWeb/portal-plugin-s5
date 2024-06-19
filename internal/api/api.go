@@ -22,6 +22,7 @@ import (
 	s5storage "go.lumeweb.com/libs5-go/storage"
 	"go.lumeweb.com/libs5-go/storage/provider"
 	"go.lumeweb.com/libs5-go/types"
+	"go.lumeweb.com/portal-plugin-s5/internal"
 	"go.lumeweb.com/portal-plugin-s5/internal/cron/define"
 	"go.lumeweb.com/portal-plugin-s5/internal/db"
 	s5 "go.lumeweb.com/portal-plugin-s5/internal/protocol"
@@ -60,8 +61,6 @@ var (
 	_ core.RoutableAPI = (*S5API)(nil)
 	_ core.APIInit     = (*S5API)(nil)
 )
-
-const protocolName = "s5"
 
 //go:embed swagger.yaml
 var swagSpec []byte
@@ -111,11 +110,11 @@ func NewS5API() (*S5API, []core.ContextBuilderOption, error) {
 }
 
 func (s S5API) Subdomain() string {
-	return "s5"
+	return internal.ProtocolName
 }
 
 func (s *S5API) Init() ([]core.ContextBuilderOption, error) {
-	proto := core.GetProtocol(protocolName)
+	proto := core.GetProtocol(internal.ProtocolName)
 
 	if proto == nil {
 		return nil, errors.New("protocol not found")
@@ -136,11 +135,11 @@ func (s *S5API) Can(_ http.ResponseWriter, r *http.Request) bool {
 		return false
 	}
 
-	if _, ok := resolve.Links[protocolName]; !ok {
+	if _, ok := resolve.Links[internal.ProtocolName]; !ok {
 		return false
 	}
 
-	decodedCid, err := encoding.CIDFromString(resolve.Links[protocolName][0].Identifier)
+	decodedCid, err := encoding.CIDFromString(resolve.Links[internal.ProtocolName][0].Identifier)
 
 	if err != nil {
 		s.logger.Error("Error decoding CID", zap.Error(err))
@@ -154,7 +153,7 @@ func (s *S5API) Can(_ http.ResponseWriter, r *http.Request) bool {
 		return false
 	}
 
-	if upload.Protocol != protocolName {
+	if upload.Protocol != internal.ProtocolName {
 		return false
 	}
 
