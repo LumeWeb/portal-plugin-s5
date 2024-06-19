@@ -25,6 +25,7 @@ import (
 	"go.lumeweb.com/portal-plugin-s5/internal/cron/define"
 	"go.lumeweb.com/portal-plugin-s5/internal/db"
 	s5 "go.lumeweb.com/portal-plugin-s5/internal/protocol"
+	syncTypes "go.lumeweb.com/portal-plugin-sync/types"
 	"go.lumeweb.com/portal/bao"
 	"go.lumeweb.com/portal/config"
 	"go.lumeweb.com/portal/core"
@@ -78,7 +79,7 @@ type S5API struct {
 	logger     *core.Logger
 	cron       core.CronService
 	_import    core.ImportService
-	sync       core.SyncService
+	sync       syncTypes.SyncService
 	dnslink    core.DNSLinkService
 	protocol   *s5.S5Protocol
 	tusHandler *s5.TusHandler
@@ -100,7 +101,7 @@ func NewS5API() (*S5API, []core.ContextBuilderOption, error) {
 			api.logger = ctx.Logger()
 			api.cron = ctx.Service(core.CRON_SERVICE).(core.CronService)
 			api._import = ctx.Service(core.IMPORT_SERVICE).(core.ImportService)
-			api.sync = ctx.Service(core.SYNC_SERVICE).(core.SyncService)
+			api.sync = ctx.Service(syncTypes.SYNC_SERVICE).(syncTypes.SyncService)
 			api.dnslink = ctx.Service(core.DNSLINK_SERVICE).(core.DNSLinkService)
 
 			return nil
