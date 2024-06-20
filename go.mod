@@ -20,7 +20,7 @@ require (
 	go.lumeweb.com/httputil v0.0.0-20240616192644-3d270a528d86
 	go.lumeweb.com/libs5-go v0.0.0-20240616210226-ffb7d91f2f3b
 	go.lumeweb.com/portal v0.1.1-0.20240619083513-e86af4e81c83
-	go.lumeweb.com/portal-plugin-sync v0.0.0-20240619035914-b1e24beb7d69
+	go.lumeweb.com/portal-plugin-sync v0.1.0
 	go.uber.org/zap v1.27.0
 	go.uber.org/zap/exp v0.2.0
 	golang.org/x/crypto v0.24.0
@@ -29,7 +29,6 @@ require (
 )
 
 require (
-	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/AfterShip/email-verifier v1.4.0 // indirect
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.2 // indirect
@@ -55,10 +54,8 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/getkin/kin-openapi v0.125.0 // indirect
 	github.com/go-co-op/gocron/v2 v2.5.0 // indirect
-	github.com/go-gorm/caches/v4 v4.0.5 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
-	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/go-viper/mapstructure/v2 v2.0.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
@@ -78,7 +75,6 @@ require (
 	github.com/knadh/koanf v1.5.0 // indirect
 	github.com/knadh/koanf/v2 v2.1.1 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/miekg/dns v1.1.59 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
@@ -124,8 +120,6 @@ require (
 	google.golang.org/grpc v1.64.0 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	gorm.io/driver/mysql v1.5.7 // indirect
-	gorm.io/driver/sqlite v1.5.5 // indirect
 	lukechampine.com/blake3 v1.3.0 // indirect
 	lukechampine.com/frand v1.4.2 // indirect
 )
