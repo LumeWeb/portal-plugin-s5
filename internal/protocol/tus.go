@@ -65,7 +65,7 @@ func NewTusHandler() (*TusHandler, []core.ContextBuilderOption) {
 			return nil
 		}),
 		core.ContextWithStartupFunc(func(context core.Context) error {
-			go th.worker()
+			th.worker()
 			return nil
 		}),
 	)
@@ -325,83 +325,119 @@ func (t *TusHandler) GetUploadSize(ctx context.Context, hash []byte) (int64, err
 }
 
 func (t *TusHandler) worker() {
-	ctx := context.Background()
-	for {
-		select {
-		case info := <-t.tus.CreatedUploads:
-			hash, ok := info.Upload.MetaData["hash"]
-			errorResponse := handler.HTTPResponse{StatusCode: 400, Header: nil}
-			if !ok {
-				t.logger.Error("Missing hash in metadata")
-				continue
-			}
+	ctx := t.ctx
 
-			uploaderID, ok := info.Context.Value(middleware.DEFAULT_USER_ID_CONTEXT_KEY).(uint)
-			if !ok {
-				errorResponse.Body = "Missing user id in context"
-				info.Upload.StopUpload(errorResponse)
-				t.logger.Error("Missing user id in context")
-				continue
-			}
+	// Start a goroutine to handle created uploads
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case info := <-t.tus.CreatedUploads:
+				hash, ok := info.Upload.MetaData["hash"]
+				errorResponse := handler.HTTPResponse{StatusCode: 400, Header: nil}
+				if !ok {
+					t.logger.Error("Missing hash in metadata")
+					continue
+				}
 
-			uploaderIP := info.HTTPRequest.RemoteAddr
+				uploaderID, ok := info.Context.Value(middleware.DEFAULT_USER_ID_CONTEXT_KEY).(uint)
+				if !ok {
+					errorResponse.Body = "Missing user id in context"
+					info.Upload.StopUpload(errorResponse)
+					t.logger.Error("Missing user id in context")
+					continue
+				}
 
-			decodedHash, err := encoding.MultihashFromBase64Url(hash)
+				uploaderIP := info.HTTPRequest.RemoteAddr
 
-			if err != nil {
-				errorResponse.Body = "Could not decode hash"
-				info.Upload.StopUpload(errorResponse)
-				t.logger.Error("Could not decode hash", zap.Error(err))
-				continue
-			}
+				decodedHash, err := encoding.MultihashFromBase64Url(hash)
 
-			var mimeType string
+				if err != nil {
+					errorResponse.Body = "Could not decode hash"
+					info.Upload.StopUpload(errorResponse)
+					t.logger.Error("Could not decode hash", zap.Error(err))
+					continue
+				}
 
-			for _, field := range []string{"mimeType", "mimetype", "filetype"} {
-				typ, ok := info.Upload.MetaData[field]
-				if ok {
-					mimeType = typ
-					break
+				var mimeType string
+
+				for _, field := range []string{"mimeType", "mimetype", "filetype"} {
+					typ, ok := info.Upload.MetaData[field]
+					if ok {
+						mimeType = typ
+						break
+					}
+				}
+
+				_, err = t.CreateUpload(ctx, decodedHash.HashBytes(), info.Upload.ID, uploaderID, uploaderIP, t.storageProtocol.Name(), mimeType)
+				if err != nil {
+					errorResponse.Body = "Could not create tus upload"
+					info.Upload.StopUpload(errorResponse)
+					t.logger.Error("Could not create tus upload", zap.Error(err))
+					continue
 				}
 			}
+		}
+	}()
 
-			_, err = t.CreateUpload(ctx, decodedHash.HashBytes(), info.Upload.ID, uploaderID, uploaderIP, t.storageProtocol.Name(), mimeType)
-			if err != nil {
-				errorResponse.Body = "Could not create tus upload"
-				info.Upload.StopUpload(errorResponse)
-				t.logger.Error("Could not create tus upload", zap.Error(err))
-				continue
-			}
-		case info := <-t.tus.UploadProgress:
-			err := t.UploadProgress(ctx, info.Upload.ID)
-			if err != nil {
-				t.logger.Error("Could not update tus upload", zap.Error(err))
-				continue
-			}
-		case info := <-t.tus.TerminatedUploads:
-			err := t.DeleteUpload(ctx, info.Upload.ID)
-			if err != nil {
-				t.logger.Error("Could not delete tus upload", zap.Error(err))
-				continue
-			}
-
-		case info := <-t.tus.CompleteUploads:
-			if !(!info.Upload.SizeIsDeferred && info.Upload.Offset == info.Upload.Size) {
-				continue
-			}
-
-			err := t.UploadCompleted(ctx, info.Upload.ID)
-			if err != nil {
-				t.logger.Error("Could not complete tus upload", zap.Error(err))
-				continue
-			}
-			err = t.ScheduleUpload(ctx, info.Upload.ID)
-			if err != nil {
-				t.logger.Error("Could not schedule tus upload", zap.Error(err))
-				continue
+	// Start a goroutine to handle upload progress
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case info := <-t.tus.UploadProgress:
+				err := t.UploadProgress(ctx, info.Upload.ID)
+				if err != nil {
+					t.logger.Error("Could not update tus upload", zap.Error(err))
+					continue
+				}
 			}
 		}
-	}
+
+	}()
+
+	// Start a goroutine to handle terminated uploads
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case info := <-t.tus.TerminatedUploads:
+				err := t.DeleteUpload(ctx, info.Upload.ID)
+				if err != nil {
+					t.logger.Error("Could not delete tus upload", zap.Error(err))
+					continue
+				}
+			}
+		}
+	}()
+
+	// Start a goroutine to handle completed uploads
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case info := <-t.tus.CompleteUploads:
+				if !(!info.Upload.SizeIsDeferred && info.Upload.Offset == info.Upload.Size) {
+					continue
+				}
+
+				err := t.UploadCompleted(ctx, info.Upload.ID)
+				if err != nil {
+					t.logger.Error("Could not complete tus upload", zap.Error(err))
+					continue
+				}
+				err = t.ScheduleUpload(ctx, info.Upload.ID)
+				if err != nil {
+					t.logger.Error("Could not schedule tus upload", zap.Error(err))
+					continue
+				}
+			}
+		}
+	}()
 }
 
 func getLockerMode(cm config.Manager, logger *core.Logger) string {
