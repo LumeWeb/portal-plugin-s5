@@ -19,7 +19,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.1
 	go.lumeweb.com/httputil v0.0.0-20240616192644-3d270a528d86
 	go.lumeweb.com/libs5-go v0.0.0-20240616210226-ffb7d91f2f3b
-	go.lumeweb.com/portal v0.1.2-0.20240624204102-d3403acb1b2f
+	go.lumeweb.com/portal v0.1.2-0.20240625015507-aacb6b3bfe16
 	go.lumeweb.com/portal-plugin-sync v0.1.0
 	go.uber.org/zap v1.27.0
 	go.uber.org/zap/exp v0.2.0
