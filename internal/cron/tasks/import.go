@@ -10,6 +10,7 @@ import (
 	"go.lumeweb.com/libs5-go/encoding"
 	"go.lumeweb.com/portal-plugin-s5/internal/cron/define"
 	"go.lumeweb.com/portal-plugin-s5/internal/protocol"
+	syncTypes "go.lumeweb.com/portal-plugin-sync/types"
 	"go.lumeweb.com/portal/bao"
 	"go.lumeweb.com/portal/core"
 	"go.lumeweb.com/portal/db/models"
@@ -147,7 +148,7 @@ func CronTaskPinImportProcessSmallFile(input any, ctx core.Context) error {
 	logger := ctx.Logger()
 	storage := ctx.Service(core.STORAGE_SERVICE).(core.StorageService)
 	_import := ctx.Service(core.IMPORT_SERVICE).(core.ImportService)
-	sync := ctx.Service(core.SYNC_SERVICE).(core.SyncService)
+	sync := ctx.Service(syncTypes.SYNC_SERVICE).(syncTypes.SyncService)
 
 	parsedCid, err := encoding.CIDFromString(args.Cid)
 	if err != nil {
@@ -210,7 +211,7 @@ func CronTaskPinImportProcessLargeFile(input any, ctx core.Context) error {
 	logger := ctx.Logger()
 	storage := ctx.Service(core.STORAGE_SERVICE).(core.StorageService)
 	_import := ctx.Service(core.IMPORT_SERVICE).(core.ImportService)
-	sync := ctx.Service(core.SYNC_SERVICE).(core.SyncService)
+	sync := ctx.Service(syncTypes.SYNC_SERVICE).(syncTypes.SyncService)
 
 	parsedCid, err := encoding.CIDFromString(args.Cid)
 	if err != nil {
