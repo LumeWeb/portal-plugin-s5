@@ -545,6 +545,8 @@ go.lumeweb.com/portal v0.1.2-0.20240625015507-aacb6b3bfe16 h1:5W1XAOB0zZJuk7tsZH
 go.lumeweb.com/portal v0.1.2-0.20240625015507-aacb6b3bfe16/go.mod h1:eQc6DJhlazmjCdp88VUsw8BkDhbIJwVaWRqkNzDDlEs=
 go.lumeweb.com/portal v0.1.2-0.20240625023959-4d19dda5af5b h1:pyscW0kSOqz+iWbOgs+4PyAr+fHWUBkmF3ZDVu1lJqI=
 go.lumeweb.com/portal v0.1.2-0.20240625023959-4d19dda5af5b/go.mod h1:eQc6DJhlazmjCdp88VUsw8BkDhbIJwVaWRqkNzDDlEs=
+go.lumeweb.com/portal v0.1.2-0.20240625105408-1fb1907d7349 h1:aq3pKeApgVdJVptjT4Z73dKQacMiRWRn/hCvwlzCOM4=
+go.lumeweb.com/portal v0.1.2-0.20240625105408-1fb1907d7349/go.mod h1:eQc6DJhlazmjCdp88VUsw8BkDhbIJwVaWRqkNzDDlEs=
 go.lumeweb.com/portal-plugin-sync v0.1.0 h1:z+oG/yPooS1vd0WMYcLDyMb+XfOs//wH7mp7B8WaxzU=
 go.lumeweb.com/portal-plugin-sync v0.1.0/go.mod h1:iftqK9AjsdIznt5GmkNN/pOHNK70jQWPBh7FpCSXV9A=
 go.sia.tech/core v0.2.7 h1:9Q/3BHL6ziAMPeiko863hhTD/Zs2s7OqEUiPKouDny8=
