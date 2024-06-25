@@ -171,11 +171,6 @@ func (s *S5Protocol) init(ctx *core.Context) error {
 
 	s.tusHandler.SetStorageProtocol(GetStorageProtocol(s))
 
-	err = s.tusHandler.Init()
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 func (s *S5Protocol) Start(ctx core.Context) error {
