@@ -150,18 +150,13 @@ func CronTaskTusUploadProcess(input any, ctx core.Context) error {
 	}
 
 	if !pinned {
-		status, lastUpdated, err := storage.UploadStatus(ctx, tus.StorageProtocol(), tus.StorageProtocol().EncodeFileName(upload.Hash))
+		err, _upload := waitForUpload(ctx, upload.Hash)
 		if err != nil {
 			return err
 		}
 
-		if status == core.StorageUploadStatusActive && lastUpdated != nil && time.Since(*lastUpdated) < 15*time.Minute {
+		if !_upload {
 			doUpload = false
-
-			err = waitForUploadCompletion(ctx, upload.Hash)
-			if err != nil {
-				return err
-			}
 		}
 	} else {
 		doUpload = false
@@ -291,27 +286,44 @@ func CronTaskTusUploadCleanup(input any, ctx core.Context) error {
 
 	return nil
 }
-func waitForUploadCompletion(ctx core.Context, hash []byte) error {
+func waitForUpload(ctx core.Context, hash []byte) (err error, upload bool) {
 	proto := core.GetProtocol("s5")
 
 	if proto == nil {
-		return errors.New("protocol not found")
+		return errors.New("protocol not found"), false
 	}
 
 	tus := proto.(*protocol.S5Protocol)
 	storage := ctx.Service(core.STORAGE_SERVICE).(core.StorageService)
 
 	for {
-		status, _, err := storage.UploadStatus(ctx, tus.StorageProtocol(), tus.StorageProtocol().EncodeFileName(hash))
+		status, lastUpdated, err := storage.UploadStatus(ctx, tus.StorageProtocol(), tus.StorageProtocol().EncodeFileName(hash))
 		if err != nil {
-			return err
+			return err, upload
 		}
-		if status != core.StorageUploadStatusActive {
+		if status == core.StorageUploadStatusProcessing {
+			upload = true
 			break
 		}
+
+		if status != core.StorageUploadStatusActive {
+			upload = false
+			break
+		}
+
+		if uploadMaybeDead(lastUpdated) {
+			upload = true
+			break
+		}
+
 		time.Sleep(5 * time.Second)
 	}
-	return nil
+
+	return nil, upload
+}
+
+func uploadMaybeDead(lastUpdated *time.Time) bool {
+	return lastUpdated != nil && time.Since(*lastUpdated) > 15*time.Minute
 }
 
 func splitS3Ids(id string) (objectId, multipartId string) {
