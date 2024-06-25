@@ -6,7 +6,7 @@ import (
 	"go.lumeweb.com/portal/core"
 )
 
-var _ core.CronableService = (*Cron)(nil)
+var _ core.Cronable = (*Cron)(nil)
 
 type Cron struct {
 	ctx core.Context
