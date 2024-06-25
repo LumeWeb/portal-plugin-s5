@@ -3,6 +3,7 @@ package s5
 import (
 	"go.lumeweb.com/portal-plugin-s5/internal"
 	"go.lumeweb.com/portal-plugin-s5/internal/api"
+	"go.lumeweb.com/portal-plugin-s5/internal/cron"
 	"go.lumeweb.com/portal-plugin-s5/internal/db"
 	"go.lumeweb.com/portal-plugin-s5/internal/protocol"
 	"go.lumeweb.com/portal/core"
@@ -19,6 +20,11 @@ func init() {
 		},
 		Models: []any{
 			&db.S5Challenge{},
+		},
+		Cron: func() core.CronFactory {
+			return func(ctx core.Context) (core.Cronable, error) {
+				return cron.NewCron(ctx), nil
+			}
 		},
 	})
 }
