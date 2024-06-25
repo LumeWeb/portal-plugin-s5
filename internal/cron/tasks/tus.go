@@ -150,12 +150,12 @@ func CronTaskTusUploadProcess(input any, ctx core.Context) error {
 	}
 
 	if !pinned {
-		status, err := storage.UploadStatus(ctx, tus.StorageProtocol(), tus.StorageProtocol().EncodeFileName(upload.Hash))
+		status, lastUpdated, err := storage.UploadStatus(ctx, tus.StorageProtocol(), tus.StorageProtocol().EncodeFileName(upload.Hash))
 		if err != nil {
 			return err
 		}
 
-		if status == core.StorageUploadStatusActive {
+		if status == core.StorageUploadStatusActive && lastUpdated != nil && time.Since(*lastUpdated) < 15*time.Minute {
 			doUpload = false
 
 			err = waitForUploadCompletion(ctx, upload.Hash)
@@ -302,7 +302,7 @@ func waitForUploadCompletion(ctx core.Context, hash []byte) error {
 	storage := ctx.Service(core.STORAGE_SERVICE).(core.StorageService)
 
 	for {
-		status, err := storage.UploadStatus(ctx, tus.StorageProtocol(), tus.StorageProtocol().EncodeFileName(hash))
+		status, _, err := storage.UploadStatus(ctx, tus.StorageProtocol(), tus.StorageProtocol().EncodeFileName(hash))
 		if err != nil {
 			return err
 		}
