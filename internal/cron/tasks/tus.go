@@ -280,7 +280,7 @@ func CronTaskTusUploadCleanup(input any, ctx core.Context) error {
 	}
 
 	err = tus.DeleteUpload(ctx, upload.UploadID)
-	if err != nil {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		logger.Error("Error deleting tus upload", zap.Error(err))
 		return err
 	}
