@@ -285,15 +285,7 @@ func CronTaskTusUploadCleanup(input any, ctx core.Context) error {
 		return err
 	}
 
-	evt, ok := ctx.Event().GetEvent(_event.EVENT_STORAGE_OBJECT_UPLOADED)
-
-	if !ok {
-		return fmt.Errorf("event %s not found", _event.EVENT_STORAGE_OBJECT_UPLOADED)
-	}
-
-	evt.(*_event.StorageObjectUploadedEvent).SetObjectMetadata(&uploadMeta)
-
-	err = ctx.Event().FireEvent(evt)
+	err = _event.FireStorageObjectUploadedEvent(ctx, &uploadMeta)
 	if err != nil {
 		return err
 	}
