@@ -230,6 +230,10 @@ func (s *S5Protocol) ValidIdentifier(identifier string) bool {
 		return true
 	}
 
+	if err == nil && len(ret) == 33 {
+		identifier = base64.RawURLEncoding.EncodeToString(ret)
+	}
+
 	ret, err = base64.RawURLEncoding.DecodeString(identifier)
 
 	if err == nil && len(ret) == 33 {
