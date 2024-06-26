@@ -352,16 +352,7 @@ func (s *S5API) smallFileUpload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	evt, ok := s.ctx.Event().GetEvent(_event.EVENT_STORAGE_OBJECT_UPLOADED)
-
-	if !ok {
-		_ = ctx.Error(NewS5Error(ErrKeyFileUploadFailed, errors.New("event not found")), http.StatusInternalServerError)
-		return
-	}
-
-	evt.(*_event.StorageObjectUploadedEvent).SetObjectMetadata(newUpload)
-
-	err = s.ctx.Event().FireEvent(evt)
+	err = _event.FireStorageObjectUploadedEvent(s.ctx, newUpload)
 	if err != nil {
 		_ = ctx.Error(NewS5Error(ErrKeyFileUploadFailed, err), http.StatusInternalServerError)
 		return
