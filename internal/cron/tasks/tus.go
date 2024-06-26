@@ -15,6 +15,7 @@ import (
 	"go.lumeweb.com/portal/bao"
 	"go.lumeweb.com/portal/core"
 	"go.lumeweb.com/portal/db/models"
+	_event "go.lumeweb.com/portal/event"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"io"
@@ -281,6 +282,19 @@ func CronTaskTusUploadCleanup(input any, ctx core.Context) error {
 	err = tus.DeleteUpload(ctx, upload.UploadID)
 	if err != nil {
 		logger.Error("Error deleting tus upload", zap.Error(err))
+		return err
+	}
+
+	evt, ok := ctx.Event().GetEvent(_event.EVENT_STORAGE_OBJECT_UPLOADED)
+
+	if !ok {
+		return fmt.Errorf("event %s not found", _event.EVENT_STORAGE_OBJECT_UPLOADED)
+	}
+
+	evt.(*_event.StorageObjectUploadedEvent).SetObjectMetadata(&uploadMeta)
+
+	err = ctx.Event().FireEvent(evt)
+	if err != nil {
 		return err
 	}
 
